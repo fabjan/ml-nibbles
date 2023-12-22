@@ -1,2 +1,2 @@
-main.lua: main.mlb main.sml game.sml
+main.lua: main.mlb love.sml main.sml game.sml
 	lunarml compile --luajit main.mlb
