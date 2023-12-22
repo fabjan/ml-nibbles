@@ -12,6 +12,17 @@ structure Love = struct
     fun setDraw (f : Lua.value) =
         Lua.setField (Lua.global "love", "draw", f)
 
+    structure Keyboard = struct
+        fun isDown (key : string) =
+            let
+                val keyboard = Lua.field (Lua.global "love", "keyboard")
+                val key = Lua.fromString key
+                val res = Lua.call (Lua.field (keyboard, "isDown")) #[key]
+            in
+                Lua.checkBoolean (Vector.sub (res, 0))
+            end
+    end
+
 	structure Graphics = struct
 		fun rectangle mode x y w h =
 			let
