@@ -23,6 +23,6 @@ fun draw' _ =
 		#[]
 	end
 
-val _ = Lua.setField (love, "update", Lua.function update')
-val _ = Lua.setField (love, "load", Lua.function init')
-val _ = Lua.setField (love, "draw", Lua.function draw')
+val _ = Love.setLoad (Lua.function init')
+val _ = Love.setUpdate (Lua.function update')
+val _ = Love.setDraw (Lua.function draw')
