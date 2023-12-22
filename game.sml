@@ -1,20 +1,32 @@
-val love = Lua.global "love"
-val graphics = Lua.field (love, "graphics")
-val print = Lua.field (graphics, "print")
+type player = {x : real, y : real}
 
-val luaInt = Lua.fromInt
-val luaString = Lua.fromString
+type game = {score : real, player : player}
 
-fun init () = 0
+fun moveLeft dx (player : player) = {player where x = (#x player) - dx}
+fun moveRight dx (player : player) = {player where x = (#x player) + dx}
 
-fun update game =
-	game + 1
+fun init () = {
+	score = 0,
+	player = {x = 0, y = 0}
+}
 
-fun draw game =
+fun update (dt : real) (game : game) =
 	let
-		val hello = luaString ("Hello, World! " ^ Int.toString game)
-		val x = luaInt 400
-		val y = luaInt 300
+		val game = {game where player = moveRight (dt * 100.0) (#player game)}
+		val game = {game where score = (#score game) + dt}
 	in
-		Lua.call print #[hello, x, y]
+		game
+	end
+
+fun draw (game : game) =
+	let
+		val hello = "Hello, World! " ^ Real.toString (#score game)
+		val player = #player game
+		val px = Real.floor (#x player)
+		val py = Real.floor (#y player)
+	in
+		(
+			Love.Graphics.print hello 400 300;
+			Love.Graphics.rectangle Fill px py 10 10
+		)
 	end

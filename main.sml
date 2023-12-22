@@ -7,9 +7,10 @@ fun init' _ =
 		#[]
 	end
 
-fun update' _ =
+fun update' args =
 	let val game = Lua.field (state, "game")
-	    val game' = update (Lua.unsafeFromValue game)
+		val dt = Lua.checkReal (Vector.sub (args, 0))
+	    val game' = update dt (Lua.unsafeFromValue game)
 		val _ = Lua.setField (state, "game", Lua.unsafeToValue game')
 	in
 		#[]
