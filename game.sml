@@ -7,12 +7,6 @@ val luaString = Lua.fromString
 
 fun init () = 0
 
-fun encode game =
-	luaInt game
-
-fun decode game =
-	Lua.checkInt game
-
 fun update game =
 	game + 1
 
