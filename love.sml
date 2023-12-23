@@ -24,6 +24,16 @@ structure Love = struct
     end
 
 	structure Graphics = struct
+        fun setColor (r : real) (g : real) (b : real) (a : real) =
+            let
+                val graphics = Lua.field (Lua.global "love", "graphics")
+                val r = Lua.fromReal r
+                val g = Lua.fromReal g
+                val b = Lua.fromReal b
+                val a = Lua.fromReal a
+            in
+                Lua.call (Lua.field (graphics, "setColor")) #[r, g, b, a]
+            end
 		fun rectangle mode x y w h =
 			let
                 val graphics = Lua.field (Lua.global "love", "graphics")
