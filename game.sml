@@ -173,11 +173,9 @@ fun collidesWithWall (snake : snake) (board : board) =
 	end
 
 fun collidesWithSelf (snake : snake) =
-	let
-		val head :: tail = #cells snake
-	in
-		List.exists (fn cell => cell = head) tail
-	end
+	case #cells snake of
+		[] => raise Fail "Snake has no head"
+	|	head :: tail =>	List.exists (fn cell => cell = head) tail
 
 fun update (dt : real) (game : game) =
 	let
