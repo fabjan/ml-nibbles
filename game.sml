@@ -9,6 +9,7 @@ type apple = {idle : real, place : coord}
 type board = {width : int, height : int}
 
 type game = {
+	alive : bool,
 	board : board,
 	snake : snake,
 	score : real,
@@ -66,6 +67,7 @@ fun init () =
 		val board = {width = 80, height = 60}
 	in
 		{
+			alive = true,
 			board = board,
 			snake = newSnake board,
 			score = 0.0,
@@ -156,13 +158,34 @@ fun updateApple (dt : real) (apple : apple) =
 fun canEatApple (snake : snake) (apple : apple) =
 	#place apple = List.hd (#cells snake)
 
+fun collidesWithWall (snake : snake) (board : board) =
+	let
+		val head = List.hd (#cells snake)
+		val x = #x head
+		val y = #y head
+		val width = #width board
+		val height = #height board
+	in
+		x < 0 orelse width <= x orelse y < 0 orelse height <= y
+	end
+
+fun collidesWithSelf (snake : snake) =
+	let
+		val head :: tail = #cells snake
+	in
+		List.exists (fn cell => cell = head) tail
+	end
+
 fun update (dt : real) (game : game) =
 	let
 		val snake = (updateSnake dt (#snake game))
 		val apple = (updateApple dt (#apple game))
 	in
-		if canEatApple snake apple
-		then
+		if not (#alive game) then
+			game
+		else if (collidesWithSelf snake) orelse (collidesWithWall snake (#board game)) then
+			{game where alive = false}
+		else if canEatApple snake apple then
 			{game where
 				snake = {snake where full = true},
 				score = #score game + 100.0 - #idle apple,
@@ -196,23 +219,39 @@ fun fillCell (color : color) (coord : coord) =
 
 val red = {r = 1.0, g = 0.0, b = 0.0, a = 1.0}
 val green = {r = 0.0, g = 1.0, b = 0.0, a = 1.0}
+val darkGreen = {r = 0.0, g = 0.5, b = 0.0, a = 1.0}
 
 fun drawApple (apple : apple) =
 	fillCell red (#place apple)
 
-fun drawSnake (snake : snake) =
-	List.foldl
-		(fn (cell, _) => fillCell green cell)
+fun drawSnake (game : game) =
+	let
+		val snake = #snake game
+		val color = if #alive game then green else darkGreen
+	in
+		List.foldl
+			(fn (cell, _) => fillCell color cell)
+			()
+			(#cells snake)
+	end
+
+fun drawGameOver (game : game) =
+	if #alive game then
 		()
-		(#cells snake)
+	else
+		(
+			Love.Graphics.setColor 1.0 0.0 0.0 1.0;
+			Love.Graphics.print "Game Over" 400 300
+		)
 
 fun draw (game : game) =
 	(
 		drawBoard (#board game);
-		drawSnake (#snake game);
+		drawSnake game;
 		drawApple (#apple game);
 		Love.Graphics.setColor 1.0 1.0 1.0 1.0;
 		Love.Graphics.print (scoreString game) 20 20;
 		Love.Graphics.print (snakeString game) 20 40;
+		drawGameOver game;
 		()
 	)
