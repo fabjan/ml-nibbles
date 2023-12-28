@@ -203,7 +203,7 @@ fun drawApple (apple : apple) =
 fun drawSnake (snake : snake) =
 	List.foldl
 		(fn (cell, _) => fillCell green cell)
-		#[]
+		()
 		(#cells snake)
 
 fun draw (game : game) =

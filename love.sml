@@ -17,9 +17,9 @@ structure Love = struct
             let
                 val keyboard = Lua.field (Lua.global "love", "keyboard")
                 val key = Lua.fromString key
-                val res = Lua.call (Lua.field (keyboard, "isDown")) #[key]
+                val res = Lua.call1 (Lua.field (keyboard, "isDown")) #[key]
             in
-                Lua.checkBoolean (Vector.sub (res, 0))
+                Lua.checkBoolean res
             end
     end
 
@@ -32,7 +32,7 @@ structure Love = struct
                 val b = Lua.fromReal b
                 val a = Lua.fromReal a
             in
-                Lua.call (Lua.field (graphics, "setColor")) #[r, g, b, a]
+                Lua.call0 (Lua.field (graphics, "setColor")) #[r, g, b, a]
             end
 		fun rectangle mode x y w h =
 			let
@@ -43,7 +43,7 @@ structure Love = struct
 				val w = Lua.fromInt w
 				val h = Lua.fromInt h
 			in
-				Lua.call (Lua.field (graphics, "rectangle")) #[mode, x, y, w, h]
+				Lua.call0 (Lua.field (graphics, "rectangle")) #[mode, x, y, w, h]
 			end
 		fun print (s : string) (x : int) (y : int) =
 			let
@@ -52,7 +52,7 @@ structure Love = struct
 				val x = Lua.fromInt x
 				val y = Lua.fromInt y
 			in
-				Lua.call (Lua.field (graphics, "print")) #[s, x, y]
+				Lua.call0 (Lua.field (graphics, "print")) #[s, x, y]
 			end
 	end
 end
