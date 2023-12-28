@@ -3,6 +3,11 @@ datatype fill_mode = Fill | Line
 fun luaFillMode Fill = Lua.fromString "fill"
   | luaFillMode Line = Lua.fromString "line"
 
+datatype sound_type = Static | Stream
+
+fun luaSoundType Static = Lua.fromString "static"
+  | luaSoundType Stream = Lua.fromString "stream"
+
 structure Love = struct
 
     fun setLoad (f : Lua.value) =
@@ -55,4 +60,17 @@ structure Love = struct
 				Lua.call0 (Lua.field (graphics, "print")) #[s, x, y]
 			end
 	end
+
+    structure Audio = struct
+        fun newSource (path : string) (mode : sound_type) =
+            let
+                val audio = Lua.field (Lua.global "love", "audio")
+                val path = Lua.fromString path
+                val mode = luaSoundType mode
+            in
+                Lua.call1 (Lua.field (audio, "newSource")) #[path, mode]
+            end
+        fun play (source : Lua.value) =
+            Lua.call0 (Lua.field (source, "play")) #[source]
+    end
 end

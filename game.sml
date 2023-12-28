@@ -25,6 +25,9 @@ type input = {
 
 val tileSize = 10
 
+val soundPickup = Love.Audio.newSource "pickup.wav" Static
+val soundDie = Love.Audio.newSource "die.wav" Static
+
 fun snakeString (game : game) =
 	"Snake: " ^ Int.toString (List.length (#cells (#snake game)))
 
@@ -184,13 +187,19 @@ fun update (dt : real) (game : game) =
 		if not (#alive game) then
 			game
 		else if (collidesWithSelf snake) orelse (collidesWithWall snake (#board game)) then
-			{game where alive = false}
+			(
+				Love.Audio.play soundDie;
+				{game where alive = false}
+			)
 		else if canEatApple snake apple then
-			{game where
-				snake = {snake where full = true},
-				score = #score game + 100.0 - #idle apple,
-				apple = newApple (#board game)
-			}
+			(
+				Love.Audio.play soundPickup;
+				{game where
+					snake = {snake where full = true},
+					score = #score game + 100.0 - #idle apple,
+					apple = newApple (#board game)
+				}
+			)
 		else
 			{game where snake = snake, apple = apple}
 	end
