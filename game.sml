@@ -24,14 +24,11 @@ type input = {
 
 val tileSize = 10
 
-fun appleString (apple : apple) =
-	"Apple: " ^ Int.toString (#x (#place apple)) ^ ", " ^ Int.toString (#y (#place apple))
+fun snakeString (game : game) =
+	"Snake: " ^ Int.toString (List.length (#cells (#snake game)))
 
-fun snakeString (snake : snake) =
-	"Snake: " ^ Int.toString (#x (List.hd (#cells snake))) ^ ", " ^ Int.toString (#y (List.hd (#cells snake)))
-
-fun scoreString (score : real) =
-	"Score: " ^ Real.toString score
+fun scoreString (game : game) =
+	"Score: " ^ Int.toString (Real.trunc (#score game))
 
 fun random lower upper =
 	let
@@ -67,10 +64,13 @@ fun newSnake (board : board) =
 fun init () =
 	let
 		val board = {width = 80, height = 60}
-		val snake = newSnake board
-		val game = {board = board, snake = snake, score = 0.0, apple = newApple board}
 	in
-		game
+		{
+			board = board,
+			snake = newSnake board,
+			score = 0.0,
+			apple = newApple board
+		}
 	end
 
 fun coordDelta (direction : direction) =
@@ -101,8 +101,11 @@ fun dragTail (snake : snake) =
 		{snake where cells = tail}
 	end
 
+fun moveDelay (snake : snake) =
+	0.01 + 0.1 * Math.pow (0.9, Real.fromInt (List.length (#cells snake)))
+
 fun moveSnake (snake : snake) =
-	if (#idle snake) < 0.1
+	if (#idle snake) < (moveDelay snake)
 	then snake
 	else
 		let
@@ -160,13 +163,11 @@ fun update (dt : real) (game : game) =
 	in
 		if canEatApple snake apple
 		then
-			let
-				val score = #score game + 100.0 - #idle apple
-				val apple = newApple (#board game)
-				val snake = {snake where full = true}
-			in
-				{game where snake = snake, score = score, apple = apple}
-			end
+			{game where
+				snake = {snake where full = true},
+				score = #score game + 100.0 - #idle apple,
+				apple = newApple (#board game)
+			}
 		else
 			{game where snake = snake, apple = apple}
 	end
@@ -211,6 +212,7 @@ fun draw (game : game) =
 		drawSnake (#snake game);
 		drawApple (#apple game);
 		Love.Graphics.setColor 1.0 1.0 1.0 1.0;
-		Love.Graphics.print (scoreString (#score game)) 20 20;
+		Love.Graphics.print (scoreString game) 20 20;
+		Love.Graphics.print (snakeString game) 20 40;
 		()
 	)
