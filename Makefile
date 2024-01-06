@@ -1,2 +1,6 @@
-main.lua: main.mlb love.sml main.sml game.sml
+basis = $(wildcard *.mlb)
+signatures = $(wildcard *.sig)
+sources = $(wildcard *.sml *.mlb *.sig)
+
+main.lua: $(basis) $(signatures) $(sources)
 	lunarml compile --luajit main.mlb
