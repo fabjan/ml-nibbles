@@ -80,4 +80,14 @@ functor Love (Lua: LUA) :> LOVE = struct
             end
     end
 
+    structure Window = struct
+        fun setTitle (title : string) =
+            let
+                val window = Lua.field (Lua.global "love", "window")
+                val title = Lua.fromString title
+            in
+                Lua.call0 (Lua.field (window, "setTitle")) #[title]
+            end
+    end
+
 end

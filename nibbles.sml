@@ -88,6 +88,7 @@ fun newSnake (board : board) =
 
 fun init () =
     let
+        val _ = Love.Window.setTitle "Nibbles"
         val board = {width = 80, height = 60}
     in
         {
