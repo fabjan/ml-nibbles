@@ -11,6 +11,8 @@ growth comes an increasing challenge, as the serpent must maneuver itself with
 ever greater precision to avoid its own elongated form and the confines of its
 quaintly rendered realm.
 
+![Screenshot](screenshot.png)
+
 ## Requirements
 
 * [LunarML](https://github.com/minoki/LunarML)
