@@ -45,6 +45,7 @@ type input = {
 }
 
 val tileSize = 10
+val restartKey = "r"
 
 val soundPickup = Love.Audio.newSource "pickup.wav" Love.Audio.Static
 val soundDie = Love.Audio.newSource "die.wav" Love.Audio.Static
@@ -233,7 +234,9 @@ fun update (dt : real) (game : game) =
         val apple = (updateApple dt (#apple game))
     in
         if not (#alive game) then
-            game
+            if Love.Keyboard.isDown restartKey
+            then init ()
+            else game
         else if (collidesWithSelf snake) orelse (collidesWithWall snake (#board game)) then
             (
                 Love.Audio.play soundDie;
@@ -306,7 +309,9 @@ fun drawGameOver (game : game) =
     else
         (
             Love.Graphics.setColor 1.0 0.0 0.0 1.0;
-            Love.Graphics.print "Game Over" 400 300
+            Love.Graphics.print "Game Over" 400 300;
+            Love.Graphics.print ("Press '" ^ restartKey ^ "' to restart") 400 320;
+            ()
         )
 
 fun draw (game : game) =
