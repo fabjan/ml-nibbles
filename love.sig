@@ -21,4 +21,9 @@ signature LOVE = sig
     structure Math : sig
         val random : unit -> real
     end
+
+    structure Window : sig
+        val setTitle : string -> unit
+    end
+
 end
