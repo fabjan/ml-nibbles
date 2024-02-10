@@ -46,6 +46,7 @@ type input = {
 
 val tileSize = 10
 val restartKey = "r"
+val speedupKey = "space"
 
 val soundPickup = Love.Audio.newSource "pickup.wav" Love.Audio.Static
 val soundDie = Love.Audio.newSource "die.wav" Love.Audio.Static
@@ -137,7 +138,10 @@ fun dragTail (snake : snake) =
     end
 
 fun moveDelay (snake : snake) =
-    0.01 + 0.1 * Math.pow (0.9, Real.fromInt (List.length (#cells snake)))
+    if Love.Keyboard.isDown speedupKey
+    then 0.01
+    else
+        0.01 + 0.1 * Math.pow (0.9, Real.fromInt (List.length (#cells snake)))
 
 fun moveSnake (snake : snake) : snake =
     if (#idle snake) < (moveDelay snake)
