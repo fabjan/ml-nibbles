@@ -1,9 +1,6 @@
 local
-    $(SML_LIB)/basis/basis.mlb
     $(SML_LIB)/basis/lua.mlb
-    lua.sig
-    love.sig
     nibbles.mlb
 in
-    main.sml
+    src/main.sml
 end

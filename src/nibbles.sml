@@ -48,8 +48,8 @@ val tileSize = 10
 val restartKey = "r"
 val speedupKey = "space"
 
-val soundPickup = Love.Audio.newSource "pickup.wav" Love.Audio.Static
-val soundDie = Love.Audio.newSource "die.wav" Love.Audio.Static
+val soundPickup = Love.Audio.newSource "assets/pickup.wav" Love.Audio.Static
+val soundDie = Love.Audio.newSource "assets/die.wav" Love.Audio.Static
 
 fun snakeString (game : game) =
     "Snake: " ^ Int.toString (List.length (#cells (#snake game)))
